@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSHealthShareUsageDescription</key>
+    <string>Running Health Review reads your running workouts, heart rate, and activity data to provide personalised AI coaching advice.</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>Running Health Review does not write any health data.</string>
+</dict>
+</plist>
