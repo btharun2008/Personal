@@ -1,0 +1,72 @@
+workflows:
+  ios-development:
+    name: iOS Development Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      groups:
+        - apple_credentials   # set up in Codemagic dashboard
+      ios_signing:
+        distribution_type: development
+        bundle_identifier: com.personal.RunningHealthReview
+      vars:
+        XCODE_SCHEME: RunningHealthReview
+        BUNDLE_ID: com.personal.RunningHealthReview
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+
+    scripts:
+      - name: Install XcodeGen
+        script: brew install xcodegen
+
+      - name: Generate Xcode project
+        script: |
+          cd RunningHealthReview
+          xcodegen generate
+
+      - name: Set bundle ID
+        script: |
+          cd RunningHealthReview
+          /usr/libexec/PlistBuddy \
+            -c "Set :CFBundleIdentifier $BUNDLE_ID" \
+            RunningHealthReview/Info.plist || true
+
+      - name: Build & archive
+        script: |
+          cd RunningHealthReview
+          xcodebuild \
+            -project RunningHealthReview.xcodeproj \
+            -scheme "$XCODE_SCHEME" \
+            -sdk iphoneos \
+            -configuration Debug \
+            -archivePath "$CM_BUILD_DIR/RunningHealthReview.xcarchive" \
+            archive \
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID"
+
+      - name: Export IPA
+        script: |
+          cd RunningHealthReview
+          xcodebuild \
+            -exportArchive \
+            -archivePath "$CM_BUILD_DIR/RunningHealthReview.xcarchive" \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath "$CM_BUILD_DIR/export"
+
+    artifacts:
+      - $CM_BUILD_DIR/export/**/*.ipa
+      - $CM_BUILD_DIR/**/*.xcarchive
+
+    publishing:
+      email:
+        recipients:
+          - $NOTIFICATION_EMAIL   # set in Codemagic environment vars
+        notify:
+          success: true
+          failure: true
