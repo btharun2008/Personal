@@ -20,13 +20,22 @@ See `episode-template.md` for a fill-in-the-blank script sheet, and
 ## Workflow per episode
 
 1. Pick a proverb/phrase from `proverbs-list.csv` (status column tracks progress).
-2. Search for clips where it's spoken verbatim (or near-verbatim) —
+2. Scaffold it: `python3 pipeline/new_episode.py --next` (or pass a phrase
+   directly) — creates `episodes/<slug>/episode.yaml` + a `clips/` folder
+   and marks the CSV row "Sourcing clips".
+3. Search for clips where it's spoken verbatim (or near-verbatim) —
    subtitle-search sites, script databases, or scrubbing scenes you
-   already know. Log timestamps/sources in the episode sheet.
-3. Write the explanation beat (2–3 sentences, no jargon).
-4. Cut the clips to the beats above, add captions (Shorts autoplay muted —
-   captions are not optional).
-5. Export vertical (1080×1920), publish, log the result.
+   already know. Drop the raw files into `episodes/<slug>/clips/` and
+   note the timestamps in `episode.yaml`.
+4. Write the explanation beat directly in `episode.yaml` (2–3 short lines,
+   no jargon).
+5. Build it: `python3 pipeline/build_episode.py episodes/<slug>/episode.yaml`
+   — auto-crops everything to vertical, burns the phrase onto the hook,
+   renders the question/explanation/CTA cards, and concatenates the
+   final MP4 + an SRT caption file.
+6. Upload, publish, log the result (`published_date` in the CSV).
+
+See `pipeline/README.md` for setup and details.
 
 ## Copyright / fair use — read before publishing
 
@@ -50,6 +59,8 @@ A few things worth deciding up front rather than after a strike:
 
 ## File map
 
-- `episode-template.md` — blank script sheet, copy per episode.
+- `episode-template.md` — blank script sheet (human-readable planning doc), copy per episode.
 - `sample-episode.md` — one full worked example ("Actions speak louder than words").
 - `proverbs-list.csv` — starter backlog of 50 phrases with tracking columns.
+- `pipeline/` — scripts that turn a filled-in episode config into the final MP4.
+- `episodes/` — one folder per episode (config, raw clips, build output).

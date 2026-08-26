@@ -1,0 +1,55 @@
+# Episode config for pipeline/build_episode.py
+# Fill in clip file paths + in/out points once you've sourced footage,
+# then run:
+#   python3 pipeline/build_episode.py episodes/<this-folder>/episode.yaml
+
+title: "Phrase goes here"
+
+# Burned onto the last hook clip.
+phrase_overlay: "Phrase goes here"
+
+# Beat 2 — the curiosity-gap card.
+question: "But what does it actually mean?"
+question_duration: 2.0
+
+# Beat 3 — one line per card, shown in sequence. Keep each line short
+# (fits on screen in one or two wraps).
+explanation:
+  - "Plain-English meaning goes here."
+  - "Optional second line — origin or nuance."
+  - "Example: \"...\" "
+# Total seconds for the whole explanation beat (split evenly across lines).
+explanation_duration: 9.0
+
+# Beat 5 — end card / CTA.
+cta: "Follow for a new phrase\nevery day"
+cta_duration: 2.5
+
+# Beat 1 — 4-5 clips. `file` is relative to this episode.yaml, `start` is
+# HH:MM:SS(.ms) or seconds into the source file, `duration` is seconds.
+hook_clips:
+  - file: "clips/hook1.mp4"
+    start: "00:00:00"
+    duration: 2.5
+  - file: "clips/hook2.mp4"
+    start: "00:00:00"
+    duration: 2.5
+  - file: "clips/hook3.mp4"
+    start: "00:00:00"
+    duration: 2.5
+  - file: "clips/hook4.mp4"
+    start: "00:00:00"
+    duration: 2.5
+
+# Beat 4 — 2 payoff clips.
+payoff_clips:
+  - file: "clips/payoff1.mp4"
+    start: "00:00:00"
+    duration: 3.0
+  - file: "clips/payoff2.mp4"
+    start: "00:00:00"
+    duration: 3.0
+
+output: "output/final.mp4"
+resolution: [1080, 1920]
+fps: 30
